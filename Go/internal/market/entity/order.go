@@ -9,7 +9,7 @@ type Order struct {
 	Price         float64
 	OrderType     string
 	Status        string
-	Transactions  []*Transactions
+	Transactions  []*Transaction
 }
 
 func NewOrder(orderID string, investor *Investor, asset *Asset, shares int, price float64, orderType string) *Order {
@@ -22,6 +22,26 @@ func NewOrder(orderID string, investor *Investor, asset *Asset, shares int, pric
 		Price:         price,
 		OrderType:     orderType,
 		Status:        "OPEN",
-		Transactions:  []*Transactions{},
+		Transactions:  []*Transaction{},
 	}
+}
+
+func (t *Transaction) CloseBuyOrder() {
+	if t.BuyingOrder.PendingShares == 0 {
+		t.BuyingOrder.Status = "CLOSED"
+	}
+}
+
+func (t *Transaction) CloseSellOrder() {
+	if t.SellingOrder.PendingShares == 0 {
+		t.SellingOrder.Status = "CLOSED"
+	}
+}
+
+func (t *Transaction) AddBuyOrderPendingShares(shares int) {
+	t.BuyingOrder.PendingShares += shares
+}
+
+func (t *Transaction) AddSellOrderPendingShares(shares int) {
+	t.SellingOrder.PendingShares += shares
 }
